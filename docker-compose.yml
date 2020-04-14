@@ -5,6 +5,6 @@ services:
     container_name: ui
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./frontend/Dockerfile
     ports:
       - '80:80'
