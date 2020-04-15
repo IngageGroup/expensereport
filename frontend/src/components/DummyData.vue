@@ -17,7 +17,7 @@ export default {
     let url = `http://localhost:81/WeatherForecast`;
     try {
       const response = await axios.get(url);
-      this.dataReturned = response.data.body;
+      this.dataReturned = response.data;
     } catch (e) {
       this.errors.push(e);
     }
