@@ -1,12 +1,3 @@
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\bin\Debug\netcoreapp3.1\appsettings.Development.json
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\bin\Debug\netcoreapp3.1\appsettings.json
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\obj\Debug\netcoreapp3.1\expensereport-api.csprojAssemblyReference.cache
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\obj\Debug\netcoreapp3.1\expensereport-api.AssemblyInfoInputs.cache
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\obj\Debug\netcoreapp3.1\expensereport-api.AssemblyInfo.cs
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\obj\Debug\netcoreapp3.1\expensereport-api.RazorTargetAssemblyInfo.cache
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\obj\Debug\netcoreapp3.1\staticwebassets\expensereport-api.StaticWebAssets.Manifest.cache
-C:\Users\aaron\source\expensereport\backend\expensereport-api\expensereport-api\obj\Debug\netcoreapp3.1\staticwebassets\expensereport-api.StaticWebAssets.xml
 C:\Users\aaron\source\expensereport\backend\expensereport-api\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\aaron\source\expensereport\backend\expensereport-api\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Users\aaron\source\expensereport\backend\expensereport-api\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
