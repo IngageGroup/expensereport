@@ -3,14 +3,14 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 
-UPLOAD_FOLDER = "/app/uploads"
-ALLOWED_EXTENSIONS = {"pdf", 'png', 'jpg', 'jpeg', 'gif', 'xlsx'}
+UPLOAD_FOLDER = '/app/uploads'
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx'}
 app = Flask(__name__)
-app.secret_key = 'super secret key'
-app.config["DEBUG"] = True
-app.config["HOST"] = "0.0.0.0"
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key='super secret key'
+app.config['DEBUG']=True
+app.config['HOST']='0.0.0.0'
+app.config['SESSION_TYPE']='filesystem'
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 CORS(app)
 
 def allowed_file(filename):
@@ -21,10 +21,10 @@ def allowed_file(filename):
 @app.route('/ping', methods=['GET'])
 def ping():
     data = {
-        "ping": "yes"
+        'ping': 'yes'
     }
     response = app.response_class(
-        response=json.dumps(data),
+        response='pong',
         status=200,
         mimetype='application/json'
     )
@@ -39,7 +39,7 @@ def upload_file():
             if allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return "files uploaded"
+    return 'files uploaded'
             
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
