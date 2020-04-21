@@ -14,7 +14,7 @@ export default {
     };
   },
   async created() {
-    let url = `http://localhost:81/WeatherForecast`;
+    let url = `http://localhost:5000`;
     try {
       const response = await axios.get(url);
       this.dataReturned = response.data;
