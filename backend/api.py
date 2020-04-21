@@ -11,10 +11,7 @@ app.config["DEBUG"] = True
 app.config["HOST"] = "0.0.0.0"
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
 CORS(app)
-
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -37,22 +34,12 @@ def ping():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return "no file"
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return "no filename"
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
-    return "end"
+        for f in request.files:
+            file = request.files[f]
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return "files uploaded"
             
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
