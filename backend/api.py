@@ -1,10 +1,11 @@
 from flask import Flask, flash, json, request, redirect, url_for
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from zipfile import ZipFile
 import os
 
 UPLOAD_FOLDER = '/app/uploads'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx'}
+ALLOWED_EXTENSIONS = {'gif', 'jpeg', 'jpg', 'pdf', 'png', 'xlsx'}
 app = Flask(__name__)
 app.secret_key='super secret key'
 app.config['DEBUG']=True
@@ -20,9 +21,6 @@ def allowed_file(filename):
 
 @app.route('/ping', methods=['GET'])
 def ping():
-    data = {
-        'ping': 'yes'
-    }
     response = app.response_class(
         response='pong',
         status=200,
