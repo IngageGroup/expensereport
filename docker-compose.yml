@@ -13,5 +13,3 @@ services:
       dockerfile: ./backend/Dockerfile
     ports:
       - '5000:5000'
-    volumes:
-      - ./backend/uploads:/app/uploads

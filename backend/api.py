@@ -1,7 +1,7 @@
-from flask import Flask, flash, json, request, redirect, url_for
+from flask import Flask, flash, json, request, redirect, Response, url_for
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-from zipfile import ZipFile
+import zipstream
 import os
 
 UPLOAD_FOLDER = '/app/uploads'
@@ -32,12 +32,20 @@ def ping():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED)
+        
         for f in request.files:
             file = request.files[f]
             if allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filename = secure_filename(file.filename)  
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                z.write(filepath)
+
+        response = Response(z, mimetype='application/zip')
+        response.headers['Content-Disposition'] = 'attachment; filename={}'.format('files.zip')
+        return response
     return 'files uploaded'
-            
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
