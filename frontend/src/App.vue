@@ -1,18 +1,25 @@
 <template>
   <div id="app">
-    <DummyData>
+
+      Last Name:
+      <input type="text" v-model="lastname" id="lastname"/>
+
+
+      First Name:
+      <input type="text" v-model="firstname" id="firstname"/>
+ 
+    <UploadWidget />
   </div>
 </template>
 
 <script>
-import DummyData from './components/DummyData.vue'
-
+import UploadWidget from "./components/UploadWidget"
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    DummyData
+    UploadWidget
   }
-}
+};
 </script>
 
 <style>
