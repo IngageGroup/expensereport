@@ -13,20 +13,22 @@ class ReportForm(Form):
     month = StringField('month', [validators.DataRequired()])
 
 
-UPLOAD_FOLDER = '/app/uploads'
 ALLOWED_EXTENSIONS = {'gif', 'jpeg', 'jpg', 'pdf', 'png', 'xlsx'}
 app = Flask(__name__)
-app.secret_key = 'super secret key'
-app.config['DEBUG'] = True
-app.config['HOST'] = '0.0.0.0'
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config.from_envvar('EXPENSE_REPORT_APP_SETTINGS')
 CORS(app)
 
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# def save_files(files):
+
+
+def generate_new_receipt_filename(form, increment, ext):
+    return "{}{}_{}_{}_{}_Receipt{}".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data), increment, ext)
 
 
 @app.route('/ping', methods=['GET'])
@@ -45,14 +47,19 @@ def upload_file():
     isValid = form.validate()
     if request.method == 'POST' and isValid == True:
         z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED)
-
+        x = 1
         for f in request.files:
             file = request.files[f]
             if allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
-                z.write(filepath)
+                ext = os.path.splitext(filepath)[1]
+                newFilePath = os.path.join(
+                    app.config['UPLOAD_FOLDER'], generate_new_receipt_filename(form, x, ext))
+                os.rename(filepath, newFilePath)
+                z.write(newFilePath)
+                x += 1
 
         response = Response(z, mimetype='application/zip')
         response.headers['Content-Disposition'] = 'attachment; filename={}'.format(
@@ -64,6 +71,7 @@ def upload_file():
             status=400,
             mimetype='application/json'
         )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
