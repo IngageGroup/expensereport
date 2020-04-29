@@ -1,6 +1,7 @@
 from flask import Flask, flash, json, request, redirect, Response, url_for
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+import datetime
 import zipstream
 import os
 from wtforms import Form, StringField, validators
@@ -9,8 +10,8 @@ from wtforms import Form, StringField, validators
 class ReportForm(Form):
     lastname = StringField('lastname', [validators.DataRequired()])
     firstname = StringField('firstname', [validators.DataRequired()])
-    year = StringField('year', [validators.DataRequired()])
-    month = StringField('month', [validators.DataRequired()])
+    year = StringField('year', [validators.DataRequired(), validators.length(4, 4)])
+    month = StringField('month', [validators.DataRequired(), validators.length(2, 2)])
 
 
 ALLOWED_EXTENSIONS = {'gif', 'jpeg', 'jpg', 'pdf', 'png', 'xlsx'}
@@ -24,12 +25,11 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# def save_files(files):
-
+def generate_new_expense_report_filename(form):
+    return "{}{}_{}_{}_Expenses.xlsx".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data))
 
 def generate_new_receipt_filename(form, increment, ext):
-    return "{}{}_{}_{}_{}_Receipt{}".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data), increment, ext)
-
+    return "{}{}_{}_{}_Receipt{}{}".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data), increment, ext)
 
 @app.route('/ping', methods=['GET'])
 def ping():
@@ -55,8 +55,13 @@ def upload_file():
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 ext = os.path.splitext(filepath)[1]
-                newFilePath = os.path.join(
-                    app.config['UPLOAD_FOLDER'], generate_new_receipt_filename(form, x, ext))
+                newFilePath = ""
+                if ext == ".xlsx":
+                    newFilePath = os.path.join(
+                        app.config['UPLOAD_FOLDER'], generate_new_expense_report_filename(form))
+                else: 
+                    newFilePath = os.path.join(
+                        app.config['UPLOAD_FOLDER'], generate_new_receipt_filename(form, x, ext))
                 os.rename(filepath, newFilePath)
                 z.write(newFilePath)
                 x += 1
