@@ -29,7 +29,7 @@ def generate_new_expense_report_filename(form):
     return "{}{}_{}_{}_Expenses.xlsx".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data))
 
 def generate_new_receipt_filename(form, increment, ext):
-    return "{}{}_{}_{}_{}_Receipt{}".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data), increment, ext)
+    return "{}{}_{}_{}_Receipt{}{}".format(str(form.year.data), str(form.month.data), str(form.lastname.data), str(form.firstname.data), increment, ext)
 
 @app.route('/ping', methods=['GET'])
 def ping():
