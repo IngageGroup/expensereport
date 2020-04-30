@@ -1,11 +1,12 @@
 <template>
   <div class="centered-container">
     <md-content class="md-elevation-3">
-
       <div class="title">
         <font-awesome-icon icon="file-archive" class="icon" />
         <div class="md-title">Expense Report</div>
-        <div class="md-body-1">Upload your expense report and reciepts so you don't have to manually rename them</div>
+        <div
+          class="md-body-1"
+        >Upload your expense report and reciepts so you don't have to manually rename them</div>
       </div>
 
       <div class="form">
@@ -20,18 +21,24 @@
         </md-field>
       </div>
 
+      <UploadWidget />
+
+      <div class="actions md-layout md-alignment-center-space-between">
+        <md-button class="md-raised md-primary" @click="post">Send</md-button>
+      </div>
 
       <div class="loading-overlay" v-if="loading">
         <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
       </div>
-      <UploadWidget />
+
     </md-content>
     <div class="background" />
   </div>
 </template>
 
 <script>
-import UploadWidget from "./components/UploadWidget"
+import axios from "axios";
+import UploadWidget from "./components/UploadWidget";
 
 export default {
   name: "App",
@@ -55,6 +62,17 @@ export default {
       setTimeout(() => {
         this.loading = false;
       }, 5000);
+    },
+    async post() {
+      this.loading = true;
+      let url = "http://localhost:5000/ping";
+      try {
+        await axios.get(url);
+        this.loading = false;
+      } catch (e) {
+        this.errors.push(e);
+        this.loading = false;
+      }
     }
   }
 };
@@ -62,10 +80,10 @@ export default {
 
 <style lang="scss">
 .icon {
-    vertical-align: middle;
-    padding: 5px;
-    color:#188786;
-    font-size: 100px;
+  vertical-align: middle;
+  padding: 5px;
+  color: #188786;
+  font-size: 100px;
 }
 .centered-container {
   display: flex;
