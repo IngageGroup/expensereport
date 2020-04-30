@@ -8,29 +8,32 @@
           class="md-body-1"
         >Upload your expense report and reciepts so you don't have to manually rename them</div>
       </div>
-
       <div class="form">
         <md-field>
           <label>First Name</label>
-          <md-input v-model="form.firstname" autofocus></md-input>
+          <md-input v-model="firstname" autofocus></md-input>
         </md-field>
 
         <md-field>
           <label>Last Name</label>
-          <md-input v-model="form.email" autofocus></md-input>
+          <md-input v-model="lastname" autofocus></md-input>
+        </md-field>
+
+        <md-field>
+          <label>Files</label>
+          <md-file v-model="files" multiple @selected="selectedFiles" />
         </md-field>
       </div>
 
-      <UploadWidget />
-
-      <div class="actions md-layout md-alignment-center-space-between">
-        <md-button class="md-raised md-primary" @click="post">Send</md-button>
+      <div class="actions md-layout md-alignment-center">
+        <md-button class="md-icon-button md-dense md-raised md-primary" @click="post">
+          <font-awesome-icon icon="paper-plane" class="icon-small" />
+        </md-button>
       </div>
 
       <div class="loading-overlay" v-if="loading">
         <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
       </div>
-
     </md-content>
     <div class="background" />
   </div>
@@ -38,36 +41,46 @@
 
 <script>
 import axios from "axios";
-import UploadWidget from "./components/UploadWidget";
 
 export default {
   name: "App",
-  components: {
-    UploadWidget
-  },
   data() {
     return {
       loading: false,
-      form: {
-        firstname: "",
-        lastname: ""
-      }
+      firstname: "",
+      lastname: "",
+      files: []
     };
   },
   methods: {
-    auth() {
-      // your code to login user
-      // this is only for example of loading
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 5000);
+    selectedFiles(files) {
+      this.files = Array.from(
+        Array(files.length),
+        (val, index) => files[index]
+      );
     },
     async post() {
       this.loading = true;
-      let url = "http://localhost:5000/ping";
+      let url = "http://localhost:5000/upload";
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+
+      let currentDate = new Date();
+      let formDataBody = new FormData();
+      formDataBody.set("firstname", this.firstname);
+      formDataBody.set("lastname", this.lastname);
+      formDataBody.set("month", ("0" + (currentDate.getMonth() + 1)).slice(-2));
+      formDataBody.set("year", currentDate.getFullYear());
+
+      for (let i = 0; i < this.files.length; i++) {
+        formDataBody.set("file" + i, this.files[i]);
+      }
+
       try {
-        await axios.get(url);
+        await axios.post(url, formDataBody, config);
         this.loading = false;
       } catch (e) {
         this.errors.push(e);
@@ -84,6 +97,12 @@ export default {
   padding: 5px;
   color: #188786;
   font-size: 100px;
+}
+.icon-small {
+  vertical-align: sub;
+  padding: 4px;
+  color: #ffffff;
+  font-size: 25px;
 }
 .centered-container {
   display: flex;
