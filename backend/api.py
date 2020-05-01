@@ -56,14 +56,16 @@ def upload_file():
                 file.save(filepath)
                 ext = os.path.splitext(filepath)[1]
                 newFilePath = ""
+                newFileName = ""
                 if ext == ".xlsx":
-                    newFilePath = os.path.join(
-                        app.config['UPLOAD_FOLDER'], generate_new_expense_report_filename(form))
+                    newFileName = generate_new_expense_report_filename(form)
+
                 else: 
-                    newFilePath = os.path.join(
-                        app.config['UPLOAD_FOLDER'], generate_new_receipt_filename(form, x, ext))
+                    newFileName = generate_new_receipt_filename(form, x, ext)
+                newFilePath = os.path.join(
+                        app.config['UPLOAD_FOLDER'], newFileName)
                 os.rename(filepath, newFilePath)
-                z.write(newFilePath)
+                z.write(newFilePath, newFileName)
                 x += 1
 
         response = Response(z, mimetype='application/zip')
