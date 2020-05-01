@@ -1,15 +1,20 @@
 version: '3.7'
 
 services:
-  ui:
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
-    ports:
-      - '80:80'
   api:
+    
     build:
       context: .
       dockerfile: ./backend/Dockerfile
     ports:
       - '5000:5000'
+    command: gunicorn --bind 0.0.0.0:5000 api:app
+  ui:
+    depends_on: 
+      - api
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - '80:80'
+    
