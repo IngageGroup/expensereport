@@ -19,10 +19,23 @@
           <md-input v-model="lastname" autofocus></md-input>
         </md-field>
 
-        <md-field>
-          <label>Files</label>
-          <md-file id="files" ref="files" multiple v-on:change="handleFileUpload()" />
-        </md-field>
+        <div class="actions md-layout md-alignment-center">
+          <md-button class="md-raised md-primary md-alignment-center" v-on:click="addFiles()">
+            <font-awesome-icon icon="paperclip" class="icon-small" />Add Files
+          </md-button>
+          <input type="file" id="files" ref="files" multiple v-on:change="handleFileUploads()" />
+        </div>
+        <md-list>
+          <md-list-item v-for="(file, key) in files" :key="file" class="file-listing">
+            <font-awesome-icon class="icon-file" icon="file-upload" />
+            {{file.name}}
+            <font-awesome-icon
+              icon="times-circle"
+              class="remove-file"
+              v-on:click="removeFile( key )"
+            >Remove</font-awesome-icon>
+          </md-list-item>
+        </md-list>
       </div>
 
       <div class="actions md-layout md-alignment-center">
@@ -56,14 +69,24 @@ export default {
   },
 
   methods: {
-    handleFileUpload() {
-      this.files = this.$refs.files.files;
+    handleFileUploads() {
+      let uploadedFiles = this.$refs.files.files;
+      for (var i = 0; i < uploadedFiles.length; i++) {
+        this.files.push(uploadedFiles[i]);
+      }
+    },
+    addFiles() {
+      this.$refs.files.click();
+    },
+    removeFile(key) {
+      this.files.splice(key, 1);
     },
     async post() {
       console.log(this.files);
       this.loading = true;
       let url = "http://localhost:5000/upload";
       let config = {
+        responseType: "arraybuffer",
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -101,9 +124,15 @@ export default {
   font-size: 100px;
 }
 .icon-small {
-  vertical-align: sub;
+  vertical-align: middle;
   padding: 4px;
   color: #ffffff;
+  font-size: 25px;
+}
+.icon-file {
+  vertical-align: middle;
+  padding: 4px;
+  color: #3700B3;
   font-size: 25px;
 }
 .centered-container {
@@ -158,6 +187,15 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  input[type="file"] {
+    position: absolute;
+    top: -500px;
+  }
+  .remove-file {
+    color: red;
+    cursor: pointer;
+    float: right;
   }
 }
 </style>
