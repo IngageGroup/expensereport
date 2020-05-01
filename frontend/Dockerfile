@@ -3,6 +3,7 @@ FROM node:latest as build
 WORKDIR /app
 COPY ./frontend /app
 RUN npm install
+RUN npm rebuild node-sass
 RUN npm run build
 
 # production environment
