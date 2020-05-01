@@ -21,7 +21,7 @@
 
         <md-field>
           <label>Files</label>
-          <md-file v-model="files" multiple @selected="selectedFiles" />
+          <md-file id="files" ref="files" multiple v-on:change="handleFileUpload()" />
         </md-field>
       </div>
 
@@ -41,25 +41,26 @@
 
 <script>
 import axios from "axios";
+import FileDownload from "js-file-download";
 
 export default {
   name: "App",
   data() {
     return {
       loading: false,
+      errors: [],
       firstname: "",
       lastname: "",
       files: []
     };
   },
+
   methods: {
-    selectedFiles(files) {
-      this.files = Array.from(
-        Array(files.length),
-        (val, index) => files[index]
-      );
+    handleFileUpload() {
+      this.files = this.$refs.files.files;
     },
     async post() {
+      console.log(this.files);
       this.loading = true;
       let url = "http://localhost:5000/upload";
       let config = {
@@ -74,13 +75,14 @@ export default {
       formDataBody.set("lastname", this.lastname);
       formDataBody.set("month", ("0" + (currentDate.getMonth() + 1)).slice(-2));
       formDataBody.set("year", currentDate.getFullYear());
-
       for (let i = 0; i < this.files.length; i++) {
-        formDataBody.set("file" + i, this.files[i]);
+        formDataBody.append("files[" + i + "]", this.files[i]);
       }
 
       try {
-        await axios.post(url, formDataBody, config);
+        await axios.post(url, formDataBody, config).then(response => {
+          FileDownload(response.data, "files.zip");
+        });
         this.loading = false;
       } catch (e) {
         this.errors.push(e);
