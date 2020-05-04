@@ -84,7 +84,7 @@ export default {
     async post() {
       console.log(this.files);
       this.loading = true;
-      let url = "http://localhost:5000/upload";
+      let url = `http://${window.location.hostname}:5000/upload`;
       let config = {
         responseType: "arraybuffer",
         headers: {
@@ -93,18 +93,22 @@ export default {
       };
 
       let currentDate = new Date();
+      let month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+      let year = currentDate.getFullYear();
       let formDataBody = new FormData();
+      let zipFileName = `${year}_${month}_${this.lastname}_${this.firstname}.zip`
       formDataBody.set("firstname", this.firstname);
       formDataBody.set("lastname", this.lastname);
-      formDataBody.set("month", ("0" + (currentDate.getMonth() + 1)).slice(-2));
-      formDataBody.set("year", currentDate.getFullYear());
+      formDataBody.set("month", month);
+      formDataBody.set("year", year);
+   
       for (let i = 0; i < this.files.length; i++) {
         formDataBody.append("files[" + i + "]", this.files[i]);
       }
 
       try {
         await axios.post(url, formDataBody, config).then(response => {
-          FileDownload(response.data, "files.zip");
+          FileDownload(response.data, zipFileName);
         });
         this.loading = false;
       } catch (e) {
