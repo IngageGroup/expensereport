@@ -44,7 +44,7 @@ how to run
 ```
 2. run command 
     - Linux or MacOs ```export EXPENSE_REPORT_APP_SETTINGS=$PWD/backend/config/LOCALCONFIG.py```
-    - Windows ```set EXPENSE_REPORT_APP_SETTINGS=%cd%/backend/config/LOCALCONFIG.py```
+    - Windows ```set EXPENSE_REPORT_APP_SETTINGS=%cd%\backend\config\LOCALCONFIG.py```
 3. then launch debug in VSCode
 
 
